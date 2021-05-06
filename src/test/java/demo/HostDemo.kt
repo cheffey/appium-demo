@@ -7,6 +7,7 @@ import org.openqa.selenium.OutputType
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.support.ui.WebDriverWait
+import java.io.File
 import java.net.URL
 
 class HostDemo {
@@ -14,6 +15,8 @@ class HostDemo {
 
     @Before
     fun setUp() {
+        val keyAbsolutePath = keyAbsolutePath()
+        println("keyStore: $keyAbsolutePath")
         val caps = DesiredCapabilities()
         caps.setCapability("platformName", "Android")
         caps.setCapability("platformVersion", "9.0")
@@ -22,6 +25,13 @@ class HostDemo {
         caps.setCapability("appPackage", "com.ringcentral.rooms")
         caps.setCapability("appActivity", "com.ringcentral.rooms.RoomsSplashActivity")
         caps.setCapability("newCommandTimeout", 20 * 60 * 1000)
+        //key
+        caps.setCapability("useKeystore", true)
+        caps.setCapability("keystorePath", keyAbsolutePath)
+        caps.setCapability("keystorePassword", "yealink")
+        caps.setCapability("keyAlias", "keyForAppium")
+        caps.setCapability("keyPassword", "yealink")
+
         driver = AndroidDriver<WebElement>(URL("http://localhost:4723/wd/hub"), caps)
     }
 
@@ -89,4 +99,7 @@ class HostDemo {
             driver!!.quit()
         }
     }
+
+    private fun keyAbsolutePath() = File("appium.keystore").absolutePath
 }
+
